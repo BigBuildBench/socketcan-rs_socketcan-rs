@@ -1,0 +1,99 @@
+[package]
+name = "socketcan"
+version = "3.4.0-pre.0"
+edition = "2021"
+rust-version = "1.70"
+authors = [
+    "Marc Brinkmann <git@marcbrinkmann.de>",
+    "Frank Pagliughi <fpagliughi@mindspring.com>"
+]
+documentation = "https://docs.rs/socketcan"
+repository = "https://github.com/mbr/socketcan-rs"
+license = "MIT"
+description = """
+Linux SocketCAN library. Send and receive CAN frames via CANbus on Linux.
+"""
+
+# Features:
+#
+# "netlink" (default) - Whether to include CAN interface configuration 
+#       capabilities based on netlink kernel communications
+# "dump" (default) - Whether to include 'candump' output parsing 
+#	capabilities.
+# "utils" - Build the command-line utilities
+#
+
+[features]
+default = ["netlink", "dump"]
+netlink = ["neli"]
+dump = []
+netlink_tests = ["netlink"]
+vcan_tests = ["netlink"]
+utils = ["clap", "anyhow"]
+tokio = ["dep:tokio", "mio", "futures"]
+async-std = ["dep:async-std", "dep:async-io"]
+async-io = ["dep:async-io"]
+enumerate = ["dep:libudev"]
+
+[dependencies]
+
+[dev-dependencies]
+anyhow = "1.0"
+ctrlc = "3.2.2"
+nb = "1.0"
+# TODO: Is it possible to only include these for async builds?
+futures-timer = "0.3"
+futures-util = "0.3"
+serial_test = { version = "2.0", features = ["async"]}
+async-std = { version = "1.12", features = ["attributes"]}
+tokio = { version = "1", features = ["macros", "rt-multi-thread", "sync", "io-util"] }
+futures = "0.3"
+
+
+[[bin]]
+name = "rcan"
+required-features = ["utils"]
+
+[[example]]
+name = "tokio_send"
+required-features = ["tokio"]
+
+[[example]]
+name = "tokio_bridge"
+required-features = ["tokio"]
+
+[[example]]
+name = "tokio_print_frames"
+required-features = ["tokio"]
+
+[[example]]
+name = "tokio_average"
+required-features = ["tokio"]
+
+[[example]]
+name = "smol_send"
+required-features = ["smol"]
+
+[[example]]
+name = "smol_bridge"
+required-features = ["smol"]
+
+[[example]]
+name = "smol_print_frames"
+required-features = ["smol"]
+
+[[example]]
+name = "async_std_send"
+required-features = ["async-std"]
+
+[[example]]
+name = "async_std_bridge"
+required-features = ["async-std"]
+
+[[example]]
+name = "async_std_print_frames"
+required-features = ["async-std"]
+
+[[example]]
+name = "enumerate"
+required-features = ["enumerate"]
